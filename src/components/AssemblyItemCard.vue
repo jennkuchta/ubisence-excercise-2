@@ -36,13 +36,7 @@
             </v-row>
           </v-container>
           <item-detail label="Time Elapsed" class="px-2">
-            t: {{ isNaN(data?.currentProduct?.entryTime) }}
-            <div
-              v-if="
-                !isNaN(data?.currentProduct?.entryTime) &&
-                !isNaN(data?.cycleTimeHrs)
-              "
-            >
+            <div v-if="hasValidTimepassed">
               <v-progress-linear
                 :color="percentTimePassedColor"
                 :value="percentTimePassed"
@@ -53,6 +47,7 @@
                 {{ percentTimePassedErrorMessage }}
               </div>
             </div>
+            <div v-else>Unknown</div>
           </item-detail>
         </v-col>
       </v-row>
@@ -97,6 +92,16 @@ export default {
       }
       return "red";
     },
+    hasValidTimepassed() {
+      if (!this.data || isNaN(this.data.cycleTimeHrs)) return false;
+      if (
+        !this.data ||
+        !this.data.currentProduct ||
+        isNaN(this.data.currentProduct.entryTime)
+      )
+        return false;
+      return true;
+    },
     percentTimePassed() {
       return (this.elapsedTime / this.cycleTime) * 100;
     },
@@ -109,12 +114,12 @@ export default {
       return "";
     },
     cycleTime() {
-      return !!this.data?.cycleTimeHrs ? this.data.cycleTimeHrs * 3600000 : 0;
+      if (!this.hasValidTimepassed) return 0;
+      return this.data.cycleTimeHrs * 3600000;
     },
     elapsedTime() {
-      return !!this.data?.currentProduct?.entryTime
-        ? this.currentTime - this.data.currentProduct.entryTime
-        : this.currentTime;
+      if (!this.hasValidTimepassed) return this.currentTime;
+      return this.currentTime - this.data.currentProduct.entryTime;
     },
     itemDetails() {
       if (!this.data.currentProduct) return [];

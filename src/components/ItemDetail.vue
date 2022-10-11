@@ -4,9 +4,9 @@
       {{ label }}
     </div>
     <div>
-      <slot>
-        <h4>{{ !!value ? value : "Unknown" }}</h4>
-      </slot>
+      <h4>
+        <slot>{{ !!value ? value : "Unknown" }}</slot>
+      </h4>
     </div>
   </div>
 </template>
