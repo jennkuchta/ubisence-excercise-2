@@ -103,12 +103,13 @@ export default {
       return true;
     },
     percentTimePassed() {
+      if (!this.hasValidTimepassed) return 0;
       return (this.elapsedTime / this.cycleTime) * 100;
     },
     percentTimePassedErrorMessage() {
       if (this.percentTimePassed > 100) {
         return `This item has exceeded its cycle time by ${this.getExceedingTimeString(
-          this.elapsedTime
+          this.elapsedTime - this.cycleTime
         )}!`;
       }
       return "";
@@ -141,17 +142,17 @@ export default {
     getExceedingTimeString(milliseconds) {
       const seconds = Math.floor(milliseconds / 1000);
       if (seconds < 60) {
-        return `${seconds} seconds`;
+        return `${seconds} second(s)`;
       }
       const minutes = Math.floor(seconds / 60);
       if (minutes < 60) {
-        return `${minutes} minutes`;
+        return `${minutes} minute(s)`;
       }
       const hours = Math.floor(minutes / 60);
       if (hours < 24) {
-        return `${hours} hours`;
+        return `${hours} hour(s)`;
       }
-      return `${Math.floor(hours / 24)} days`;
+      return `${Math.floor(hours / 24)} day(s)`;
     },
     generateTimestring(milliseconds) {
       const date = new Date(milliseconds);
