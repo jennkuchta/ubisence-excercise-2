@@ -174,6 +174,7 @@ export default {
 }
 .assembly-item-card.v-sheet.v-card {
   border-radius: 12px;
+  min-height: 100%;
 }
 .assembly-item-card .error-text {
   color: red;
