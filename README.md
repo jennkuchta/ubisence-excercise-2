@@ -1,2 +1,13 @@
 # ubisence-excercise-2
-Created with CodeSandbox
+
+## Biggest Challenges
+
+Getting the project set up was the hardest part for me. I have gotten used to building on just one Vue application, so setting up a new application was something I have not practiced as much. First, I had a hard time with the Vuetify css helpers. A lot of them were not working, and I could not figure out why. I spent some time proceeding with using just regular css because I didn't want the Vuetify css helpers to hold me back. Then, I realized I was missing the v-app tag which the helplers rely on and I was able to delete some of my css in favor of the Vuetify helpers. Second, I struggled with the Vuex store set up. A lot of the documentation I was referencing was for Vue 3, so it took me a while to figure out the syntax I needed for the version of Vue and Vuex I had.
+
+## Design Decisions
+
+How I set up the Vuex was the first big design decision I made. I would say that I made the structure too modular for the purpose of this application. However, I have found that Vuex stores are often the part of the application that grows the most as the application expands, and it is easier to lay a good foundation at the start rather than make that change and have to refactor later. My goal was to make my store easy to build on but still simple to read.
+
+I did chose to leave my Vuex stores fairly empty. I did not store anything in the state and I did not have any getters. This is because there was only one component that need to access the store, so it would be easier for me to only need to work in that file. It also makes it easier for someone else to read. The logic is in the same place it is used. Also, this is something that is easy to change later. As soon as I write another component that uses the same data, I could easily move my logic to the state and getters of the Vuex store because getters work very similarly to computed properties. I would not duplicate any logic because that would make debugging harder for myself down the road.
+
+Another decision I made was how to break down the components. I chose to keep App.vue as the entry point with the top toolbar and a component for the workstations content. This component is very small right now, but it is a good structure in case we want to add multiple pages or tabs to navigate to. Next, I made the Workstations.Vue component. I seperated this one into a role I thought would logically make sense. It's responsibility is to request the data, handle loading and errors associated with the request, then combining the data into a format required by the subcomponents. The AssemblyItem cards was a clear item that needed to be it's own component since it is repeated and looks almost identical in all places it as repeated. Once I got into the AssemblyItem I tried avoiding making anything too
