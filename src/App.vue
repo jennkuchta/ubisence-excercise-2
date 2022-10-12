@@ -8,8 +8,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { WORKSTATIONS } from "./store/namespaces";
 import AppToolbar from "./components/AppToolbar";
 import WorkStations from "./components/WorkStations";
 
@@ -18,13 +16,6 @@ export default {
   components: {
     AppToolbar,
     WorkStations,
-  },
-  created() {
-    console.warn(this.$vuetify);
-    // console.warn(this.$store, "l");
-  },
-  computed: {
-    ...mapState(WORKSTATIONS, ["testValue"]),
   },
 };
 </script>

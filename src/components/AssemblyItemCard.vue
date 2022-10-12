@@ -36,13 +36,7 @@
             </v-row>
           </v-container>
           <item-detail label="Time Elapsed" class="px-2">
-            t: {{ isNaN(data?.currentProduct?.entryTime) }}
-            <div
-              v-if="
-                !isNaN(data?.currentProduct?.entryTime) &&
-                !isNaN(data?.cycleTimeHrs)
-              "
-            >
+            <div v-if="hasValidTimepassed">
               <v-progress-linear
                 :color="percentTimePassedColor"
                 :value="percentTimePassed"
@@ -53,6 +47,7 @@
                 {{ percentTimePassedErrorMessage }}
               </div>
             </div>
+            <div v-else>Unknown</div>
           </item-detail>
         </v-col>
       </v-row>
@@ -97,24 +92,35 @@ export default {
       }
       return "red";
     },
+    hasValidTimepassed() {
+      if (!this.data || isNaN(this.data.cycleTimeHrs)) return false;
+      if (
+        !this.data ||
+        !this.data.currentProduct ||
+        isNaN(this.data.currentProduct.entryTime)
+      )
+        return false;
+      return true;
+    },
     percentTimePassed() {
+      if (!this.hasValidTimepassed) return 0;
       return (this.elapsedTime / this.cycleTime) * 100;
     },
     percentTimePassedErrorMessage() {
       if (this.percentTimePassed > 100) {
         return `This item has exceeded its cycle time by ${this.getExceedingTimeString(
-          this.elapsedTime
+          this.elapsedTime - this.cycleTime
         )}!`;
       }
       return "";
     },
     cycleTime() {
-      return !!this.data?.cycleTimeHrs ? this.data.cycleTimeHrs * 3600000 : 0;
+      if (!this.hasValidTimepassed) return 0;
+      return this.data.cycleTimeHrs * 3600000;
     },
     elapsedTime() {
-      return !!this.data?.currentProduct?.entryTime
-        ? this.currentTime - this.data.currentProduct.entryTime
-        : this.currentTime;
+      if (!this.hasValidTimepassed) return this.currentTime;
+      return this.currentTime - this.data.currentProduct.entryTime;
     },
     itemDetails() {
       if (!this.data.currentProduct) return [];
@@ -136,17 +142,17 @@ export default {
     getExceedingTimeString(milliseconds) {
       const seconds = Math.floor(milliseconds / 1000);
       if (seconds < 60) {
-        return `${seconds} seconds`;
+        return `${seconds} second(s)`;
       }
       const minutes = Math.floor(seconds / 60);
       if (minutes < 60) {
-        return `${minutes} minutes`;
+        return `${minutes} minute(s)`;
       }
       const hours = Math.floor(minutes / 60);
       if (hours < 24) {
-        return `${hours} hours`;
+        return `${hours} hour(s)`;
       }
-      return `${Math.floor(hours / 24)} days`;
+      return `${Math.floor(hours / 24)} day(s)`;
     },
     generateTimestring(milliseconds) {
       const date = new Date(milliseconds);
@@ -168,6 +174,7 @@ export default {
 }
 .assembly-item-card.v-sheet.v-card {
   border-radius: 12px;
+  min-height: 100%;
 }
 .assembly-item-card .error-text {
   color: red;
