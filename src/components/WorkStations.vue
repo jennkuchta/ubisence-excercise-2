@@ -39,7 +39,6 @@ export default {
     workstations: [],
   }),
   mounted() {
-    console.warn(this.$store);
     this.getWorkStations()
       .then((workstations) => {
         this.workstations = workstations;
@@ -52,7 +51,6 @@ export default {
       });
     this.getEngines()
       .then((engines) => {
-        console.warn("ENGINES", engines, this.getEngines, ENGINES);
         this.engines = engines;
       })
       .catch((err) => {
@@ -74,7 +72,7 @@ export default {
     workstationsData() {
       if (!this.dataReady) return [];
       return this.workstations.map((workstation) => {
-        if (!!workstation.currentProduct) {
+        if (workstation.currentProduct) {
           const currentProductData = this.engines.find(
             (engine) => engine.id === workstation.currentProduct.id
           );

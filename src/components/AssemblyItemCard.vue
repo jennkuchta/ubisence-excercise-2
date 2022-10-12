@@ -4,8 +4,7 @@
       {{ data.name }}
     </v-card-title>
     <v-container
-      style="min-height: 230px"
-      class="d-flex justify-center align-center"
+      class="item-content d-flex justify-center align-center"
     >
       <v-row v-if="data.currentProduct" no-gutters>
         <v-col cols="12" md="6" class="d-flex align-center justify-center">
@@ -175,6 +174,9 @@ export default {
 .assembly-item-card.v-sheet.v-card {
   border-radius: 12px;
   min-height: 100%;
+}
+.assembly-item-card .item-content {
+  min-height: 230px;
 }
 .assembly-item-card .error-text {
   color: red;
